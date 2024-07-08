@@ -18,17 +18,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
-import org.ddmac.ksmcnc.ui.theme.KsmcncTheme
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
+import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.ddmac.ksmcnc.ui.theme.KsmcncTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +49,7 @@ class MainActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = "$selected", fontSize = TextUnit(22f, TextUnitType.Sp))
+                        Text(text = "Selected: $selected", fontSize = TextUnit(22f, TextUnitType.Sp))
                         Button(onClick = {
                             sendReq(0)
                         }) {
@@ -70,12 +69,16 @@ class MainActivity : ComponentActivity() {
 
     fun sendReq(selection: Int){
         CoroutineScope(Dispatchers.Default).launch {
+            val body = FormBody.Builder()
+                .add("selected","$selection")
+                .build()
+
             val res = OkHttpClient()
                 .newCall(
                     Request
                         .Builder()
-                        .url("")
-                        .post("{\"selected\": $selection}".toRequestBody("application/json".toMediaTypeOrNull()))
+                        .url("http://192.168.1.71:5000/setSelected")
+                        .post(body)
                         .build()
                 ).execute()
 
