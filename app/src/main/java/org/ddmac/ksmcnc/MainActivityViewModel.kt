@@ -26,7 +26,7 @@ class MainActivityViewModel: ViewModel() {
     init {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.Default).launch(exceptionHandler) {
-                SelectedFlow("http://192.168.1.71:5000/getSelected").selected.catch {
+                SelectedFlow("http://192.168.0.223:5000/getSelected").selected.catch {
                     Log.d(SelectedFlow::class.simpleName,"Error in communication",it)
                 }.collect {
                     _selected.value = it

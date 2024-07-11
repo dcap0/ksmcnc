@@ -77,7 +77,7 @@ class MainActivity : ComponentActivity() {
                 .newCall(
                     Request
                         .Builder()
-                        .url("http://192.168.1.71:5000/setSelected")
+                        .url("http://192.168.0.223:5000/setSelected")
                         .post(body)
                         .build()
                 ).execute()
